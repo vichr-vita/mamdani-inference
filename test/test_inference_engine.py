@@ -51,4 +51,3 @@ class InferenceEngineTestCase(unittest.TestCase):
 
         results = engine.defuzzify()
         self.assertTrue(0.0 < results['risk'] < 0.4)
-

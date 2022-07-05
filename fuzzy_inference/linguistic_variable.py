@@ -2,18 +2,18 @@ from __future__ import annotations
 from typing import Collection
 
 from fuzzy_inference.fuzzy_set import FuzzySet
-import numpy as np
-import copy
 
+import matplotlib.pyplot as plt
 
 class LinguisticVariable:
-    def __init__(self, name, terms: dict[str, FuzzySet], range: Collection = (0, 1)) -> None:
+    def __init__(self, name, terms: dict[str, FuzzySet], range: Collection = (0, 1), domain: str = 'x') -> None:
         self.name = name
         self.terms: dict[str, FuzzySet] = terms
         self._a_prime: float | FuzzySet = 0
         self.min, self.max = range
         self.fuzzified: dict[str, float] = {} # for inputs
         self.b_prime: dict[str, FuzzySet] = {k: FuzzySet.uniform(0) for k, _ in self.terms.items()} # for fuzzy outputs
+        self.domain = domain
 
     @property
     def a_prime(self):

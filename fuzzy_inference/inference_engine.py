@@ -14,7 +14,15 @@ class InferenceEngine:
         self._rulebase: list[Rule] = []
 
     @property
-    def inputvars(self):
+    def rulebase(self):
+        return self._rulebase
+
+    @rulebase.setter
+    def rulebase(self, rulebase: list[Rule]) -> None:
+        self._rulebase = rulebase
+
+    @property
+    def inputvars(self) -> dict[str, LinguisticVariable]:
         return self._inputvars
 
     @inputvars.setter
@@ -45,6 +53,18 @@ class InferenceEngine:
             B_prime = FuzzySet.intersection(
                 B, FuzzySet.uniform(ceil), (outvar.min, outvar.max))
             outvar.b_prime[rule.consequent[1]] = B_prime
+
+    def output_fuzzy(self, resolution: int = DEFAULT_RESOLUTION) -> dict[str, FuzzySet]:
+        results = {}
+        for var_name, var in self.outputvars.items():
+            fuzz = FuzzySet.uniform(0)
+            for term_name, term in var.b_prime.items():
+                fuzz = FuzzySet.union(
+                    fuzz, term, (var.min, var.max), resolution=DEFAULT_RESOLUTION)
+                # I need to perform the intesection operation on ALL the terms, not just one
+                results[var_name] = fuzz
+        return results
+
 
     def defuzzify(self):
         """uses center of maxima function to defuzzify output measures"""

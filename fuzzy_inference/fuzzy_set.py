@@ -1,5 +1,6 @@
 from __future__ import annotations
 from filecmp import DEFAULT_IGNORES
+import math
 import numpy as np
 
 from typing import Collection
@@ -101,3 +102,21 @@ class FuzzySet:
         f3 = FuzzySet(vertices)
         f3.height = np.max(vertices[:, 1])
         return f3
+
+    def constrain_range(self, range: tuple[float, float]):
+        arr = np.empty((len(self.vertices), 2), float)
+        for i, vertex in enumerate(self.vertices):
+            if vertex[0] == -np.inf:
+                arr[i] = np.array([range[0], vertex[1]])
+            elif vertex[0] == np.inf:
+                arr[i] = np.array([range[1], vertex[1]])
+            else:
+                arr[i] = vertex
+        return FuzzySet(arr)
+
+    def hedge(self, coeff: float, range: tuple[float, float] = (0, 1), resolution: int = DEFAULT_RESOLUTION) -> FuzzySet:
+        vertices = [np.array([v, self.mu(v)])
+                    for v in np.linspace(range[0], range[1], resolution)]
+        vertices = np.array([np.array([v[0], math.pow(v[1], coeff)])
+                            for v in vertices])
+        return FuzzySet(vertices)
