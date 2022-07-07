@@ -8,6 +8,7 @@ from typing import Collection
 
 DEFAULT_RESOLUTION = 1000
 
+
 class FuzzySet:
     """
     piecewise linear mu
@@ -24,7 +25,6 @@ class FuzzySet:
 
     def mu_inv(self, mu: float) -> float:
         return np.interp([mu], [t[1] for t in self.vertices], [t[0] for t in self.vertices])[0]
-
 
     def discretize(self, range: tuple[float, float], resolution: int = DEFAULT_RESOLUTION):
         return np.array([np.array([x, self.mu(x)]) for x in np.linspace(range[0], range[1], resolution)])
@@ -86,19 +86,20 @@ class FuzzySet:
             (np.inf, height)
         ]))
 
-
     @staticmethod
-    def union(f1: FuzzySet, f2:FuzzySet, range: tuple[float, float], resolution: int = DEFAULT_RESOLUTION) -> FuzzySet:
+    def union(f1: FuzzySet, f2: FuzzySet, range: tuple[float, float], resolution: int = DEFAULT_RESOLUTION) -> FuzzySet:
         x = np.linspace(range[0], range[1], resolution)
-        vertices = np.vstack((x, np.maximum(f1.discretize(range, resolution=resolution)[:, 1], f2.discretize(range, resolution=resolution)[:, 1]))).T
+        vertices = np.vstack((x, np.maximum(f1.discretize(range, resolution=resolution)[
+                             :, 1], f2.discretize(range, resolution=resolution)[:, 1]))).T
         f3 = FuzzySet(vertices)
         f3.height = np.max(vertices[:, 1])
         return f3
 
     @staticmethod
-    def intersection(f1: FuzzySet, f2:FuzzySet, range: tuple[float, float], resolution: int = DEFAULT_RESOLUTION) -> FuzzySet:
+    def intersection(f1: FuzzySet, f2: FuzzySet, range: tuple[float, float], resolution: int = DEFAULT_RESOLUTION) -> FuzzySet:
         x = np.linspace(range[0], range[1], resolution)
-        vertices = np.vstack((x, np.minimum(f1.discretize(range, resolution=resolution)[:, 1], f2.discretize(range, resolution=resolution)[:, 1]))).T
+        vertices = np.vstack((x, np.minimum(f1.discretize(range, resolution=resolution)[
+                             :, 1], f2.discretize(range, resolution=resolution)[:, 1]))).T
         f3 = FuzzySet(vertices)
         f3.height = np.max(vertices[:, 1])
         return f3

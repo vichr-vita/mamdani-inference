@@ -5,14 +5,16 @@ from fuzzy_inference.fuzzy_set import FuzzySet
 
 import matplotlib.pyplot as plt
 
+
 class LinguisticVariable:
     def __init__(self, name, terms: dict[str, FuzzySet], range: Collection = (0, 1), domain: str = 'x') -> None:
         self.name = name
         self.terms: dict[str, FuzzySet] = terms
         self._a_prime: float | FuzzySet = 0
         self.min, self.max = range
-        self.fuzzified: dict[str, float] = {} # for inputs
-        self.b_prime: dict[str, FuzzySet] = {k: FuzzySet.uniform(0) for k, _ in self.terms.items()} # for fuzzy outputs
+        self.fuzzified: dict[str, float] = {}  # for inputs
+        self.b_prime: dict[str, FuzzySet] = {k: FuzzySet.uniform(
+            0) for k, _ in self.terms.items()}  # for fuzzy outputs
         self.domain = domain
 
     @property
@@ -28,7 +30,6 @@ class LinguisticVariable:
             self.fuzzified = self.fuzzify_fuzzy(self._a_prime)  # type: ignore
         else:
             raise ValueError(str(type(value)) + ' is not supported.')
-
 
     def fuzzify_crisp(self, x: float) -> dict[str, float]:
         fuz = {}

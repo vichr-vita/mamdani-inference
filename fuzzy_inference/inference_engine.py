@@ -65,17 +65,17 @@ class InferenceEngine:
                 results[var_name] = fuzz
         return results
 
-
     def defuzzify(self):
         """uses center of maxima function to defuzzify output measures"""
         results = {}
         for var_name, var in self.outputvars.items():
             fuzz = FuzzySet.uniform(0)
             for term_name, term in var.b_prime.items():
-                fuzz = FuzzySet.union(fuzz, term, (var.min, var.max), resolution=DEFAULT_RESOLUTION)
+                fuzz = FuzzySet.union(
+                    fuzz, term, (var.min, var.max), resolution=DEFAULT_RESOLUTION)
                 # I need to perform the intesection operation on ALL the terms, not just one
-            maximum = np.max(fuzz.vertices[:,1])
-            maxima = np.where(fuzz.vertices[:,1] == maximum)
+            maximum = np.max(fuzz.vertices[:, 1])
+            maxima = np.where(fuzz.vertices[:, 1] == maximum)
             max_left, max_right = maxima[0][0], maxima[0][-1]
             x_max_index = (max_left + max_right)/2
             lower_i = fuzz.vertices[math.floor(x_max_index)]
@@ -83,4 +83,3 @@ class InferenceEngine:
             defuzz_x = (upper_i[0] + lower_i[0])/2
             results[var_name] = defuzz_x
         return results
-        

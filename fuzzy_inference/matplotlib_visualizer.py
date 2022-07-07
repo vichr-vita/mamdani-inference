@@ -17,7 +17,7 @@ def _term_name_x_pos(vertices: np.ndarray):
             return (vertices[2][0] + vertices[3][0])/2
 
 
-class LVVizualizer:
+class LVVisualizer:
 
     def __init__(self, lv: LinguisticVariable) -> None:
         self.lv = lv
@@ -36,7 +36,7 @@ class LVVizualizer:
         return ax
 
 
-class FuzzySetVizualizer:
+class FuzzySetVisualizer:
     def __init__(self, f: FuzzySet, name: str = '', domain: str = 'x') -> None:
         self.f = f
         self.name = name
